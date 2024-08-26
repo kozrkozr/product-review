@@ -1,30 +1,27 @@
 import {
   AfterViewInit,
   ChangeDetectorRef,
-  Component,
+  Directive,
   Inject,
   Input,
   OnChanges,
   Optional,
   SimpleChanges,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
-import { UnsubscribeService } from '@app/shared/services/unsubscribe.service';
-import { TIME_LIMITED_CONTENTS_TRIGGER } from './time-limited-content-trigger.token';
+import { TIME_LIMITED_TEMPLATE_TRIGGER } from './time-limited-content-trigger.token';
 import { Subject, switchMap, takeUntil, timer } from 'rxjs';
-import { DetachedChangeDetection } from '@app/shared/helpers/detached-change-detection.class';
+import { UnsubscribeService } from '../services/unsubscribe.service';
+import { DetachedChangeDetection } from '../helpers/detached-change-detection.class';
 
 const DEFAULT_DISPLAYED_TIME = 3000;
 
-@Component({
-  selector: 'app-time-limited-content',
-  template: `
-    <ng-container *ngIf="isVisible">
-      <ng-content></ng-content>
-    </ng-container>
-  `,
+@Directive({
+  selector: '[appTimeLimitedTemplate]',
   providers: [UnsubscribeService],
 })
-export class TimeLimitedContentComponent
+export class TimeLimitedTemplateDirective
   extends DetachedChangeDetection
   implements OnChanges, AfterViewInit
 {
@@ -33,11 +30,11 @@ export class TimeLimitedContentComponent
 
   trigger$: Subject<void>;
 
-  isVisible: boolean = false;
-
   constructor(
+    private templateRef: TemplateRef<any>,
+    private viewContainer: ViewContainerRef,
     @Optional()
-    @Inject(TIME_LIMITED_CONTENTS_TRIGGER)
+    @Inject(TIME_LIMITED_TEMPLATE_TRIGGER)
     trigger$: Subject<void>,
     private unsubcribe$: UnsubscribeService,
     changeDetectorRef: ChangeDetectorRef
@@ -57,7 +54,9 @@ export class TimeLimitedContentComponent
     this.trigger$
       .pipe(
         switchMap(() => {
-          this.isVisible = true;
+          if (this.viewContainer.length === 0) {
+            this.viewContainer.createEmbeddedView(this.templateRef);
+          }
 
           this.detectChanges();
 
@@ -66,7 +65,7 @@ export class TimeLimitedContentComponent
         takeUntil(this.unsubcribe$)
       )
       .subscribe(() => {
-        this.isVisible = false;
+        this.viewContainer.clear();
 
         this.detectChanges();
       });

@@ -12,9 +12,9 @@ import { UnsubscribeService } from '@app/shared/services/unsubscribe.service';
 import { debounceTime, takeUntil } from 'rxjs';
 import { ProductReviewStateService } from './product-review-state';
 import { DEFAULT_DEBOUNCE_TIME } from '@app/shared/constants';
-import { TIME_LIMITED_CONTENTS_TRIGGER } from '@app/shared/components/time-limited-content/time-limited-content-trigger.token';
 import { DetachedChangeDetection } from '@app/shared/helpers/detached-change-detection.class';
 import { ErrorMessageRendererService } from '@app/shared/components/error-message-outlet/error-message-renderer.service';
+import { TIME_LIMITED_TEMPLATE_TRIGGER } from '@app/shared/directives/time-limited-content-trigger.token';
 
 @Component({
   selector: 'app-product-review',
@@ -23,7 +23,7 @@ import { ErrorMessageRendererService } from '@app/shared/components/error-messag
     UnsubscribeService,
     ProductReviewStateService,
     {
-      provide: TIME_LIMITED_CONTENTS_TRIGGER,
+      provide: TIME_LIMITED_TEMPLATE_TRIGGER,
       useFactory: (state: ProductReviewStateService) => {
         return state.getUpdatedProductReview$();
       },

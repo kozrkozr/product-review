@@ -17,13 +17,12 @@
           [rows]="3"
         ></textarea>
 
-        <app-time-limited-content>
-          <span
-            class="bg-green-50 px-2 py-1 text-xs font-medium text-green-700"
-          >
-            {{ productReviewForm.value.reviewComment }}
-          </span>
-        </app-time-limited-content>
+        <span
+          *appTimeLimitedTemplate
+          class="bg-green-50 px-2 py-1 text-xs font-medium text-green-700"
+        >
+          {{ productReviewForm.value.reviewComment }}
+        </span>
       </div>
 
       <div class="mb-4">
@@ -43,13 +42,12 @@
           </div>
         </div>
 
-        <app-time-limited-content>
-          <span
-            class="bg-green-50 px-2 py-1 text-xs font-medium text-green-700"
-          >
-            {{ productReviewForm.value.rating }}
-          </span>
-        </app-time-limited-content>
+        <span
+          *appTimeLimitedTemplate
+          class="bg-green-50 px-2 py-1 text-xs font-medium text-green-700"
+        >
+          {{ productReviewForm.value.rating }}
+        </span>
       </div>
 
       <div class="mb-4 flex flex-col">
@@ -65,13 +63,12 @@
           >
         </div>
 
-        <app-time-limited-content>
-          <span
-            class="bg-green-50 px-2 py-1 text-xs font-medium text-green-700"
-          >
-            {{ productReviewForm.value.isRecommended }}
-          </span>
-        </app-time-limited-content>
+        <span
+          *appTimeLimitedTemplate
+          class="bg-green-50 px-2 py-1 text-xs font-medium text-green-700 max-w-max"
+        >
+          {{ productReviewForm.value.isRecommended }}
+        </span>
       </div>
 
       <app-error-message-outlet></app-error-message-outlet>
